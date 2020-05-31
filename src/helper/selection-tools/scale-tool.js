@@ -146,7 +146,7 @@ class ScaleTool {
         }
         this.boundsPath.remove();
         this.boundsPath = null;
-
+        
         // mark text items as scaled (for later use on font size calc)
         for (let i = 0; i < this.itemGroup.children.length; i++) {
             const child = this.itemGroup.children[i];
@@ -165,7 +165,7 @@ class ScaleTool {
             this.itemGroup.layer.addChildren(this.itemGroup.children);
         }
         this.itemGroup.remove();
-
+        
         this.onUpdateImage();
         this.active = false;
     }

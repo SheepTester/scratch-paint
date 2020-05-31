@@ -59,7 +59,7 @@ class PointTool {
             }
             hitProperties.hitResult.segment.selected = true;
         }
-
+        
         this.selectedItems = getSelectedLeafItems();
     }
     /**
@@ -144,7 +144,7 @@ class PointTool {
         this.deselectOnMouseUp = null;
         this.invertDeselect = false;
         this.deleteOnMouseUp = null;
-
+        
         const point = event.point;
         const bounds = getActionBounds();
         point.x = Math.max(bounds.left, Math.min(point.x, bounds.right));
@@ -154,7 +154,7 @@ class PointTool {
         const dragVector = point.subtract(event.downPoint);
         const delta = point.subtract(this.lastPoint);
         this.lastPoint = point;
-
+        
         const selectedSegments = getSelectedSegments();
         for (const seg of selectedSegments) {
             // add the point of the segment before the drag started
@@ -172,7 +172,7 @@ class PointTool {
     }
     onMouseUp () {
         this.lastPoint = null;
-
+        
         // resetting the items and segments origin points for the next usage
         let moved = false;
         const selectedSegments = getSelectedSegments();

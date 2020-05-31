@@ -2,7 +2,7 @@ import paper from '@scratch/paper';
 import {getRaster} from '../layer';
 import {forEachLinePoint, getBrushMark} from '../bitmap';
 import {createCanvas, getGuideLayer} from '../layer';
-import {artBoardWidth, artBoardHeight} from '../view';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT} from '../view';
 
 /**
  * Tool for drawing lines with the bitmap brush.
@@ -14,7 +14,7 @@ class LineTool extends paper.Tool {
     constructor (onUpdateImage) {
         super();
         this.onUpdateImage = onUpdateImage;
-
+        
         // We have to set these functions instead of just declaring them because
         // paper.js tools hook up the listeners in the setter functions.
         this.onMouseMove = this.handleMouseMove;
@@ -92,13 +92,13 @@ class LineTool extends paper.Tool {
 
         // Clear
         const context = this.drawTarget.canvas.getContext('2d');
-        context.clearRect(0, 0, artBoardWidth(), artBoardHeight());
+        context.clearRect(0, 0, ART_BOARD_WIDTH, ART_BOARD_HEIGHT);
 
         forEachLinePoint(this.startPoint, event.point, this.draw.bind(this));
     }
     handleMouseUp (event) {
         if (event.event.button > 0 || !this.active) return; // only first mouse button
-
+        
         this.drawTarget.remove();
         this.drawTarget = getRaster();
         forEachLinePoint(this.startPoint, event.point, this.draw.bind(this));

@@ -11,7 +11,7 @@ import {undoSnapshot, clearUndoState} from '../reducers/undo';
 import {isGroup, ungroupItems} from '../helper/group';
 import {clearRaster, convertBackgroundGuideLayer, getRaster, setupLayers} from '../helper/layer';
 import {clearSelectedItems} from '../reducers/selected-items';
-import {artBoardWidth, artBoardHeight, CENTER, MAX_WORKSPACE_BOUNDS} from '../helper/view';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, CENTER, MAX_WORKSPACE_BOUNDS} from '../helper/view';
 import {clampViewBounds, resetZoom, setWorkspaceBounds, zoomToFit, resizeCrosshair} from '../helper/view';
 import {ensureClockwise, scaleWithStrokes} from '../helper/math';
 import {clearHoveredItem} from '../reducers/hover';
@@ -150,12 +150,13 @@ class PaperCanvas extends React.Component {
 
                 getRaster().drawImage(
                     imgElement,
-                    (artBoardWidth() / 2) - rotationCenterX,
-                    (artBoardHeight() / 2) - rotationCenterY);
+                    (ART_BOARD_WIDTH / 2) - rotationCenterX,
+                    (ART_BOARD_HEIGHT / 2) - rotationCenterY);
                 getRaster().drawImage(
                     imgElement,
-                    (artBoardWidth() / 2) - rotationCenterX,
-                    (artBoardHeight() / 2) - rotationCenterY);
+                    (ART_BOARD_WIDTH / 2) - rotationCenterX,
+                    (ART_BOARD_HEIGHT / 2) - rotationCenterY);
+
                 this.maybeZoomToFit(true /* isBitmap */);
                 performSnapshot(this.props.undoSnapshot, Formats.BITMAP_SKIP_CONVERT);
                 this.recalibrateSize();

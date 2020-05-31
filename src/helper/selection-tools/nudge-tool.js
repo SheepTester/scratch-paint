@@ -31,7 +31,7 @@ class NudgeTool {
 
         const selected = getSelectedRootItems();
         if (selected.length === 0) return;
-
+        
         // Get bounds. Don't let item bounds go out of bounds.
         let rect;
         for (const item of selected) {

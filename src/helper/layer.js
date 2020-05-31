@@ -37,7 +37,7 @@ const createCanvas = function (width, height) {
 const clearRaster = function () {
     const layer = _getLayer('isRasterLayer');
     layer.removeChildren();
-
+    
     // Generate blank raster
     const raster = new paper.Raster(createCanvas());
     raster.canvas.getContext('2d').imageSmoothingEnabled = false;
@@ -288,7 +288,7 @@ const _makeOutlineLayer = function () {
 const _makeBackgroundGuideLayer = function (format) {
     const guideLayer = new paper.Layer();
     guideLayer.locked = true;
-
+    
     const vWorkspaceBounds = new paper.Shape.Rectangle(MAX_WORKSPACE_BOUNDS);
     vWorkspaceBounds.fillColor = '#ECF1F9';
     vWorkspaceBounds.position = CENTER;
@@ -319,7 +319,7 @@ const _makeBackgroundGuideLayer = function (format) {
     guideLayer.bitmapBackground = bitmapBackground;
 
     _convertLayer(guideLayer, format);
-
+    
     _makeCrosshair(0.16, guideLayer);
 
     guideLayer.data.isBackgroundGuideLayer = true;

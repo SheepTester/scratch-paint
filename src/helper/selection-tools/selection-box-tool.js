@@ -2,7 +2,7 @@ import paper from '@scratch/paper';
 import {rectSelect} from '../guides';
 import {clearSelection, processRectangularSelection} from '../selection';
 import {getRaster} from '../layer';
-import {artBoardWidth, artBoardHeight} from '../view';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT} from '../view';
 import {getHitBounds} from '../../helper/bitmap';
 
 /** Tool to handle drag selection. A dotted line box appears and everything enclosed is selected. */
@@ -51,8 +51,8 @@ class SelectionBoxTool {
                     Math.max(0, Math.round(this.selectionRect.bounds.topLeft.x)),
                     Math.max(0, Math.round(this.selectionRect.bounds.topLeft.y))),
                 to: new paper.Point(
-                    Math.min(artBoardWidth(), Math.round(this.selectionRect.bounds.bottomRight.x)),
-                    Math.min(artBoardHeight(), Math.round(this.selectionRect.bounds.bottomRight.y)))
+                    Math.min(ART_BOARD_WIDTH, Math.round(this.selectionRect.bounds.bottomRight.x)),
+                    Math.min(ART_BOARD_HEIGHT, Math.round(this.selectionRect.bounds.bottomRight.y)))
             });
 
             // Trim/tighten selection bounds inwards to only the opaque region, excluding transparent pixels
