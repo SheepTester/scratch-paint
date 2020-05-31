@@ -16,7 +16,7 @@ import {commitRectToBitmap, commitOvalToBitmap, commitSelectionToBitmap, getHitB
 import {performSnapshot} from '../helper/undo';
 import {scaleWithStrokes} from '../helper/math';
 
-import {artBoardWidth, artBoardHeight, svgArtBoardWidth, svgArtBoardHeight} from '../helper/view';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, SVG_ART_BOARD_WIDTH, SVG_ART_BOARD_HEIGHT} from '../helper/view';
 import {setWorkspaceBounds} from '../helper/view';
 
 import Modes from '../lib/modes';
@@ -108,8 +108,8 @@ const UpdateImageHOC = function (WrappedComponent) {
             this.props.onUpdateImage(
                 false /* isVector */,
                 imageData,
-                (artBoardWidth() / 2) - rect.x,
-                (artBoardHeight() / 2) - rect.y);
+                (ART_BOARD_WIDTH / 2) - rect.x,
+                (ART_BOARD_HEIGHT / 2) - rect.y);
 
             if (!skipSnapshot) {
                 performSnapshot(this.props.undoSnapshot, Formats.BITMAP);

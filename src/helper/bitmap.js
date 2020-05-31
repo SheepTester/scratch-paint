@@ -2,7 +2,7 @@ import paper from '@scratch/paper';
 import {createCanvas, clearRaster, getRaster, hideGuideLayers, showGuideLayers} from './layer';
 import {getGuideColor} from './guides';
 import {clearSelection} from './selection';
-import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, CENTER, MAX_WORKSPACE_BOUNDS} from './view';
+import {artBoardWidth, artBoardHeight, getCenter, maxWorkspaceBounds} from './view';
 import {inlineSvgFonts} from 'scratch-svg-renderer';
 import Formats from '../lib/format';
 
@@ -413,9 +413,9 @@ const convertToBitmap = function (clearSelectedItems, onUpdateImage) {
                 item.remove();
             } else {
                 // Resize mask for bitmap bounds
-                item.size.height = ART_BOARD_HEIGHT;
-                item.size.width = ART_BOARD_WIDTH;
-                item.setPosition(CENTER);
+                item.size.height = artBoardHeight();
+                item.size.width = artBoardWidth();
+                item.setPosition(getCenter());
             }
         }
         onUpdateImage(false /* skipSnapshot */, Formats.BITMAP /* formatOverride */);
@@ -441,9 +441,9 @@ const convertToVector = function (clearSelectedItems, onUpdateImage) {
     for (const item of paper.project.activeLayer.children) {
         if (item.clipMask === true) {
             // Resize mask for vector bounds
-            item.size.height = MAX_WORKSPACE_BOUNDS.height;
-            item.size.width = MAX_WORKSPACE_BOUNDS.width;
-            item.setPosition(CENTER);
+            item.size.height = maxWorkspaceBounds().height;
+            item.size.width = maxWorkspaceBounds().width;
+            item.setPosition(getCenter());
         }
     }
     getTrimmedRaster(true /* shouldInsert */);

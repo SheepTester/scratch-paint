@@ -9,38 +9,32 @@ import log from '../log/log';
 // canvases of ART_BOARD size.
 // (This is for backwards compatibility, to handle both assets
 // designed for 480 x 360, and bitmap resolution 2 bitmaps)
-let artBoardWidth = 640;
-let artBoardHeight = 360;
-const svgArtBoardWidth = () => {
-    return artBoardWidth
-};
-const svgArtBoardHeight = () => {
-    return artBoardHeight
-};
-const getArtBoardWidth = () => {
-    return artBoardWidth * 2
-};
-const getArtBoardHeight = () => {
-    return artBoardHeight * 2
-};
+let SVG_ART_BOARD_WIDTH;
+let SVG_ART_BOARD_HEIGHT;
+let ART_BOARD_WIDTH;
+let ART_BOARD_HEIGHT;
+let CENTER;
+let ART_BOARD_BOUNDS;
+let MAX_WORKSPACE_BOUNDS = new paper.Rectangle();
 const setArtBoardSize = (width, height) => {
-    artBoardWidth = width;
-    artBoardHeight = height;
-};
-const getCenter = () => {
-    return new paper.Point(getArtBoardWidth() / 2, getArtBoardHeight() / 2);
+    SVG_ART_BOARD_WIDTH = width;
+    SVG_ART_BOARD_HEIGHT = height;
+    ART_BOARD_WIDTH = SVG_ART_BOARD_WIDTH * 2;
+    ART_BOARD_HEIGHT = SVG_ART_BOARD_HEIGHT * 2;
+    CENTER = new paper.Point(ART_BOARD_WIDTH / 2, ART_BOARD_HEIGHT / 2);
+    ART_BOARD_BOUNDS = new paper.Rectangle(0, 0, ART_BOARD_WIDTH, ART_BOARD_HEIGHT);
+    MAX_WORKSPACE_BOUNDS.set(
+        -ART_BOARD_WIDTH / 4,
+        -ART_BOARD_HEIGHT / 4,
+        ART_BOARD_WIDTH * 1.5,
+        ART_BOARD_HEIGHT * 1.5);
 };
 const PADDING_PERCENT = 25; // Padding as a percent of the max of width/height of the sprite
 const BUFFER = 50; // Number of pixels of allowance around objects at the edges of the workspace
 const MIN_RATIO = .125; // Zoom in to at least 1/8 of the screen. This way you don't end up incredibly
 //                         zoomed in for tiny costumes.
 const OUTERMOST_ZOOM_LEVEL = 0.333;
-const ART_BOARD_BOUNDS = new paper.Rectangle(0, 0, ART_BOARD_WIDTH, ART_BOARD_HEIGHT);
-const MAX_WORKSPACE_BOUNDS = new paper.Rectangle(
-    -ART_BOARD_WIDTH / 4,
-    -ART_BOARD_HEIGHT / 4,
-    ART_BOARD_WIDTH * 1.5,
-    ART_BOARD_HEIGHT * 1.5);
+setArtBoardSize(640, 360);
 
 let _workspaceBounds = ART_BOARD_BOUNDS;
 
@@ -219,14 +213,14 @@ const zoomToFit = isBitmap => {
 
 export {
     ART_BOARD_BOUNDS,
-    getArtBoardWidth as artBoardWidth,
-    getArtBoardHeight as artBoardHeight,
-    getCenter,
+    ART_BOARD_HEIGHT,
+    ART_BOARD_WIDTH,
+    CENTER,
     OUTERMOST_ZOOM_LEVEL,
-    svgArtBoardWidth,
-    svgArtBoardHeight,
-    setArtBoardSize,
+    SVG_ART_BOARD_WIDTH,
+    SVG_ART_BOARD_HEIGHT,
     MAX_WORKSPACE_BOUNDS,
+    setArtBoardSize,
     clampViewBounds,
     getActionBounds,
     pan,

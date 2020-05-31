@@ -1,6 +1,6 @@
 import paper from '@scratch/paper';
 import log from '../log/log';
-import {ART_BOARD_BOUNDS, artBoardWidth, artBoardHeight, getCenter, MAX_WORKSPACE_BOUNDS} from './view';
+import {ART_BOARD_BOUNDS, ART_BOARD_WIDTH, ART_BOARD_HEIGHT, CENTER, MAX_WORKSPACE_BOUNDS} from './view';
 import {isGroupItem} from './item';
 import {isBitmap, isVector} from '../lib/format';
 
@@ -22,14 +22,14 @@ const _getPaintingLayer = function () {
 
 /**
  * Creates a canvas with width and height matching the art board size.
- * @param {?number} width Width of the canvas. Defaults to artBoardWidth().
- * @param {?number} height Height of the canvas. Defaults to artBoardHeight().
+ * @param {?number} width Width of the canvas. Defaults to ART_BOARD_WIDTH.
+ * @param {?number} height Height of the canvas. Defaults to ART_BOARD_HEIGHT.
  * @return {HTMLCanvasElement} the canvas
  */
 const createCanvas = function (width, height) {
     const canvas = document.createElement('canvas');
-    canvas.width = width ? width : artBoardWidth();
-    canvas.height = height ? height : artBoardHeight();
+    canvas.width = width ? width : ART_BOARD_WIDTH;
+    canvas.height = height ? height : ART_BOARD_HEIGHT;
     canvas.getContext('2d').imageSmoothingEnabled = false;
     return canvas;
 };
@@ -254,7 +254,7 @@ const _makeCrosshair = function (opacity, parent) {
     crosshair.addChild(circle);
 
     setGuideItem(crosshair);
-    crosshair.position = getCenter();
+    crosshair.position = CENTER;
     crosshair.opacity = opacity;
     crosshair.parent = parent;
     crosshair.applyMatrix = false;
