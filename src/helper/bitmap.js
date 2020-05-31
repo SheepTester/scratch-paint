@@ -2,6 +2,7 @@ import paper from '@scratch/paper';
 import {createCanvas, clearRaster, getRaster, hideGuideLayers, showGuideLayers} from './layer';
 import {getGuideColor} from './guides';
 import {clearSelection} from './selection';
+import {ART_BOARD_WIDTH, ART_BOARD_HEIGHT, CENTER, MAX_WORKSPACE_BOUNDS} from './view';
 import {inlineSvgFonts} from 'scratch-svg-renderer';
 import Formats from '../lib/format';
 
@@ -319,11 +320,18 @@ const columnBlank_ = function (imageData, width, x, top, bottom) {
     return true;
 };
 
-// Adapted from Tim Down's https://gist.github.com/timdown/021d9c8f2aabc7092df564996f5afbbf
-// Get bounds, trimming transparent pixels from edges.
-const getHitBounds = function (raster) {
-    const width = raster.width;
-    const imageData = raster.getImageData(raster.bounds);
+/**
+ * Get bounds around the contents of a raster, trimming transparent pixels from edges.
+ * Adapted from Tim Down's https://gist.github.com/timdown/021d9c8f2aabc7092df564996f5afbbf
+ * @param {paper.Raster} raster The raster to get the bounds around
+ * @param {paper.Rectangle} [rect] Optionally, an alternative bounding rectangle to limit the check to.
+ * @returns {paper.Rectangle} The bounds around the opaque area of the passed raster
+ * (or opaque within the passed rectangle)
+ */
+const getHitBounds = function (raster, rect) {
+    const bounds = rect || raster.bounds;
+    const width = bounds.width;
+    const imageData = raster.getImageData(bounds);
     let top = 0;
     let bottom = imageData.height;
     let left = 0;
@@ -342,7 +350,7 @@ const getHitBounds = function (raster) {
         left = right = imageData.width / 2;
     }
 
-    return new paper.Rectangle(left, top, right - left, bottom - top);
+    return new paper.Rectangle(left + bounds.left, top + bounds.top, right - left, bottom - top);
 };
 
 const trim_ = function (raster) {
@@ -399,7 +407,17 @@ const convertToBitmap = function (clearSelectedItems, onUpdateImage) {
                 img,
                 new paper.Point(Math.floor(bounds.topLeft.x), Math.floor(bounds.topLeft.y)));
         }
-        paper.project.activeLayer.removeChildren();
+        for (let i = paper.project.activeLayer.children.length - 1; i >= 0; i--) {
+            const item = paper.project.activeLayer.children[i];
+            if (item.clipMask === false) {
+                item.remove();
+            } else {
+                // Resize mask for bitmap bounds
+                item.size.height = ART_BOARD_HEIGHT;
+                item.size.width = ART_BOARD_WIDTH;
+                item.setPosition(CENTER);
+            }
+        }
         onUpdateImage(false /* skipSnapshot */, Formats.BITMAP /* formatOverride */);
     };
     img.onerror = () => {
@@ -420,7 +438,16 @@ const convertToBitmap = function (clearSelectedItems, onUpdateImage) {
 
 const convertToVector = function (clearSelectedItems, onUpdateImage) {
     clearSelection(clearSelectedItems);
+    for (const item of paper.project.activeLayer.children) {
+        if (item.clipMask === true) {
+            // Resize mask for vector bounds
+            item.size.height = MAX_WORKSPACE_BOUNDS.height;
+            item.size.width = MAX_WORKSPACE_BOUNDS.width;
+            item.setPosition(CENTER);
+        }
+    }
     getTrimmedRaster(true /* shouldInsert */);
+
     clearRaster();
     onUpdateImage(false /* skipSnapshot */, Formats.VECTOR /* formatOverride */);
 };
@@ -756,9 +783,13 @@ const commitOvalToBitmap = function (oval, bitmap) {
     const radiusY = Math.abs(oval.size.height / 2);
     const context = bitmap.getContext('2d');
     const filled = oval.strokeWidth === 0;
-    context.fillStyle = filled ?
-        oval.fillColor && oval.fillColor.toCSS() : oval.strokeColor && oval.strokeColor.toCSS();
 
+    const canvasColor = filled ? oval.fillColor : oval.strokeColor;
+    // If the color is null (e.g. fully transparent/"no fill"), don't bother drawing anything,
+    // and especially don't try calling `toCSS` on it
+    if (!canvasColor) return;
+
+    context.fillStyle = canvasColor.toCSS();
     const drew = drawEllipse({
         position: oval.position,
         radiusX,
@@ -779,8 +810,13 @@ const commitRectToBitmap = function (rect, bitmap) {
     const tmpCanvas = createCanvas();
     const context = tmpCanvas.getContext('2d');
     const filled = rect.strokeWidth === 0;
-    context.fillStyle = filled ?
-        rect.fillColor && rect.fillColor.toCSS() : rect.strokeColor && rect.strokeColor.toCSS();
+
+    const canvasColor = filled ? rect.fillColor : rect.strokeColor;
+    // If the color is null (e.g. fully transparent/"no fill"), don't bother drawing anything,
+    // and especially don't try calling `toCSS` on it
+    if (!canvasColor) return;
+
+    context.fillStyle = canvasColor.toCSS();
     if (filled) {
         fillRect(rect, context);
     } else {

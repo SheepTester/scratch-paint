@@ -32,7 +32,7 @@ class RectTool extends paper.Tool {
             setCursor,
             onUpdateImage
         );
-        const nudgeTool = new NudgeTool(this.boundingBoxTool, onUpdateImage);
+        const nudgeTool = new NudgeTool(Modes.BIT_RECT, this.boundingBoxTool, onUpdateImage);
 
         // We have to set these functions instead of just declaring them because
         // paper.js tools hook up the listeners in the setter functions.
@@ -76,7 +76,8 @@ class RectTool extends paper.Tool {
                 this.thickness = this.rect.strokeWidth;
             }
             this.filled = this.rect.strokeWidth === 0;
-            this.color = this.filled ? this.rect.fillColor.toCSS() : this.rect.strokeColor.toCSS();
+            const color = this.filled ? this.rect.fillColor : this.rect.strokeColor;
+            this.color = color ? color.toCSS() : null;
         } else if (this.rect && this.rect.isInserted() && !this.rect.selected) {
             // Rectangle got deselected
             this.commitRect();
